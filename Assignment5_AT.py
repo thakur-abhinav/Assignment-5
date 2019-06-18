@@ -73,6 +73,7 @@ def keras_cnn_model(X,Y,x,y):
   sgd=tf.keras.optimizers.SGD(lr=0.01,momentum=0.9, nesterov=True)
   lrdecay=tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=10,min_lr=0.0005)
   es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', patience=10)
+  checkpoint=tf.keras.callbacks.ModelCheckpoint('/home/abhinav/Desktop/Assignment5_AT/checkpoint.txt', monitor='val_loss',period=1)
   model.add(convk(32,3,(28,28,1)))
   model.add(poolk(2))
   model.add(tf.keras.layers.BatchNormalization())
@@ -88,7 +89,7 @@ def keras_cnn_model(X,Y,x,y):
   model.add(tf.keras.layers.Dense(10, activation='softmax'))
   model.summary()
   model.compile(loss='categorical_crossentropy' ,metrics=['accuracy'],optimizer=sgd)
-  model.fit(X,Y,batch_size=128,epochs=6,validation_data=(x,y),callbacks=[lrdecay,es])
+  model.fit(X,Y,batch_size=128,epochs=6,validation_data=(x,y),callbacks=[lrdecay,es,checkpoint])
   return
 
 def cnn_model(features,labels,mode):
